@@ -1,18 +1,46 @@
+// Load environment variables from .env file
+require('dotenv').config();
+
+// Import required dependencies
 const express = require('express');
 const cors = require('cors');
+
+// Initialize express application
 const app = express();
 
-// Middleware
+// --- Middleware Configuration ---
+// Enable Cross-Origin Resource Sharing (CORS)
 app.use(cors());
+
+// Parse incoming JSON requests
 app.use(express.json());
 
-// Test Route
+// --- Environment Variables ---
+// Set port from environment variables or use 5000 as default
+const PORT = process.env.PORT || 5000;
+
+// --- Routes ---
+// Test route to verify server is running
 app.get('/', (req, res) => {
     res.send('HabiTraqa Backend is Running!');
 });
 
-// Start Server
-const PORT = process.env.PORT || 5000;
+// Health check endpoint for monitoring
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+// --- Error Handling Middleware ---
+// Global error handler for unhandled errors
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// --- Server Initialization ---
+// Start the server and listen for requests
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+}).on('error', (err) => {
+    console.error('Server failed to start:', err);
 });
