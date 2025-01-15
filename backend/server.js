@@ -6,6 +6,9 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/database');
 
+// Import routes
+const userRoutes = require('./routes/userRoutes');
+
 // Initialize express application
 const app = express();
 
@@ -20,7 +23,11 @@ app.use(express.json());
 // Set port from environment variables or use 5000 as default
 const PORT = process.env.PORT || 5000;
 
-// --- Routes ---
+// --- Route Mounting ---
+// Mount user routes under /api/users endpoint
+app.use('/api/users', userRoutes);
+
+// --- Base Routes ---
 // Test route to verify server is running
 app.get('/', (req, res) => {
     res.send('HabiTraqa Backend is Running!');
