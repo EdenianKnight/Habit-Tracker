@@ -4,6 +4,7 @@ require('dotenv').config();
 // Import required dependencies
 const express = require('express');
 const cors = require('cors');
+const db = require('./config/database');
 
 // Initialize express application
 const app = express();
@@ -27,7 +28,10 @@ app.get('/', (req, res) => {
 
 // Health check endpoint for monitoring
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok' });
+    res.status(200).json({
+        status: 'ok',
+        database: db.state === 'authenticated' ? 'connected' : 'disconnected'
+    });
 });
 
 // --- Error Handling Middleware ---
