@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assests/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <title>HabiTraqa - Habit Tracker</title>
 </head>
 <body>
@@ -11,16 +11,31 @@
         <h1>Welcome to HabiTraqa</h1>
     </header>
     <main>
-        <p>Track and achieve your goals with ease.</p>
-        <div class="cta-buttons">
-            <a href="login.html" class="btn">Login</a>
-            <a href="signup.html" class="btn">Sign Up</a>
-            <button id="guest-mode" class="btn">Try as Guest</button>
-        </div>
+        <section id="welcome-section">
+            <p>Track and achieve your goals with ease.</p>
+            <div class="cta-buttons">
+                <a href="login.html" class="btn">Login</a>
+                <a href="signup.html" class="btn">Sign Up</a>
+                <button id="guest-mode-btn" class="btn">Try as Guest</button>
+            </div>
+            <p class="warning">Guest mode data will be lost if you leave the page. To save your habits, sign up!</p>
+        </section>
+
+        <section id="guest-tracker" class="hidden">
+            <h2>Guest Habit Tracker</h2>
+            <form id="habit-form">
+                <div class="form-group">
+                    <input type="text" name="habit" placeholder="Enter a habit" required>
+                    <button type="submit" class="btn">Add Habit</button>
+                </div>
+            </form>
+            <ul id="habit-list"></ul>
+        </section>
     </main>
+    
     <footer>
         <p>&copy; 2025 HabiTraqa. All rights reserved.</p>
     </footer>
-    <script src="../assests/js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
 </body>
 </html>

@@ -1,0 +1,124 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f9;
+    color: #333;
+    text-align: center;
+}
+
+header {
+    background: #5a67d8;
+    color: #fff;
+    padding: 1em 0;
+}
+
+main {
+    padding: 2em 1em;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Welcome Section */
+#welcome-section {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cta-buttons {
+    margin: 2em 0;
+}
+
+.btn {
+    display: inline-block;
+    margin: 0.5em;
+    padding: 0.8em 1.2em;
+    color: #fff;
+    background: #48bb78;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background: #38a169;
+}
+
+/* Guest Tracker Section */
+#guest-tracker {
+    max-width: 600px;
+    margin: 2em auto;
+}
+
+#habit-form {
+    display: flex;
+    margin: 2em auto;
+    padding: 1em;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 400px;
+}
+
+.form-group {
+    display: flex;
+    gap: 0.5em;
+    width: 100%;
+}
+
+#habit-form input {
+    flex: 1;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#habit-form .btn {
+    margin: 0;
+}
+
+#habit-list {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.habit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.btn-delete {
+    background: #e63946;
+    padding: 0.3em 0.5em;
+    margin: 0;
+}
+
+.btn-delete:hover {
+    background: #d62828;
+}
+
+.warning {
+    color: #e63946;
+    font-size: 0.9em;
+    margin-top: 0.5em;
+}
+
+footer {
+    margin-top: 2em;
+    padding: 1em;
+    background: #5a67d8;
+    color: #fff;
+}
