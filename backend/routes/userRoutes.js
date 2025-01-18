@@ -1,9 +1,12 @@
+// routes/userRoutes.js
 const express = require('express');
 const { check } = require('express-validator');
-const { registerUser, loginUser } = require('../controllers/userController');
+const authenticateToken = require('../middleware/auth');
+const { registerUser, loginUser, getProfile } = require('../controllers/userController');
 
 const router = express.Router();
 
+// Registration route with validation
 router.post(
     '/register',
     [
@@ -14,6 +17,7 @@ router.post(
     registerUser
 );
 
+// Login route with validation
 router.post(
     '/login',
     [
@@ -22,5 +26,8 @@ router.post(
     ],
     loginUser
 );
+
+// Protected profile route
+router.get('/me', authenticateToken, getProfile);
 
 module.exports = router;

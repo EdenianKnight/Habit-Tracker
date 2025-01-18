@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const db = require('../config/database');  // Changed from '../db/connection' to match project structure
 
 const registerUser = async (req, res) => {
     const errors = validationResult(req);
@@ -55,4 +56,21 @@ const loginUser = async (req, res) => {
     });
 };
 
-module.exports = { registerUser, loginUser };
+const getProfile = async (req, res) => {
+    try {
+        const [rows] = await db.promise().query(
+            'SELECT id, username, email, created_at FROM users WHERE id = ?',
+            [req.user.id]
+        );
+        
+        if (!rows.length) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        
+        res.json({ user: rows[0] });
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving user profile.', error: err.message });
+    }
+};
+
+module.exports = { registerUser, loginUser, getProfile };
