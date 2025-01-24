@@ -1,0 +1,16 @@
+# Environment Variables for Small Steps Backend
+NODE_ENV=development
+PORT=5000
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=knight
+DB_PASSWORD="#6EdeniaKnight9#"
+DB_NAME=SmallSteps
+
+# JWT Secret for Authentication
+JWT_SECRET=42f84ecb2dc920e0584054c5a8fe72fc3a35b5511efca5a424b57fac3c1536d9e325a97bbd22c66708ba38fcaa27a2fea31ff1855c6f79cda811790193ed1539
+
+# Token Expiration
+JWT_EXPIRATION=1h

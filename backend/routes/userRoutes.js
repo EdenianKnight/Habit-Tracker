@@ -1,33 +1,48 @@
-// routes/userRoutes.js
+/**
+ * User Routes
+ * Defines the API endpoints for user-related operations in the application.
+ */
+
 const express = require('express');
-const { check } = require('express-validator');
-const authenticateToken = require('../middleware/auth');
-const { registerUser, loginUser, getProfile } = require('../controllers/userController');
-
 const router = express.Router();
+const userController = require('../controllers/userController');
+const authMiddleware = require('../middleware/auth');
+const validationMiddleware = require('../middleware/validation');
 
-// Registration route with validation
+// User Registration Route
+/**
+ * @route POST /api/users/register
+ * @description Registers a new user.
+ * @access Public
+ */
 router.post(
     '/register',
-    [
-        check('username', 'Username is required').notEmpty(),
-        check('email', 'Valid email is required').isEmail(),
-        check('password', 'Password must be at least 6 characters').isLength({ min: 6 }),
-    ],
-    registerUser
+    validationMiddleware.validateRegistration,
+    userController.register
 );
 
-// Login route with validation
+// User Login Route
+/**
+ * @route POST /api/users/login
+ * @description Authenticates a user and returns a token.
+ * @access Public
+ */
 router.post(
     '/login',
-    [
-        check('email', 'Valid email is required').isEmail(),
-        check('password', 'Password is required').notEmpty(),
-    ],
-    loginUser
+    validationMiddleware.validateLogin,
+    userController.login
 );
 
-// Protected profile route
-router.get('/me', authenticateToken, getProfile);
+// Get User Profile Route
+/**
+ * @route GET /api/users/profile
+ * @description Retrieves the authenticated user's profile.
+ * @access Private
+ */
+router.get(
+    '/profile',
+    authMiddleware,
+    userController.getProfile
+);
 
 module.exports = router;

@@ -1,31 +1,59 @@
-const db = require('../config/database');
+/**
+ * User Model
+ * Defines the schema and model for users in the HabiTraqa application.
+ */
 
-const User = {
-    create: (username, email, hashedPassword, callback) => {
-        console.log('Creating user:', username, email); // Debugging statement
-        const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-        db.query(query, [username, email, hashedPassword], (err, result) => {
-            if (err) {
-                console.error('Error creating user:', err); // Debugging statement
-            } else {
-                console.log('User created successfully:', result); // Debugging statement
-            }
-            callback(err, result);
-        });
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database');
+
+class User extends Model {}
+
+User.init(
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            allowNull: false,
+            comment: 'Primary key for the User table (UUID format).',
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                len: [3, 50],
+            },
+            comment: 'Unique username for the user.',
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+            },
+            comment: 'User email address (unique).',
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            comment: 'Hashed password for the user.',
+        },
     },
-
-    findByEmail: (email, callback) => {
-        console.log('Finding user by email:', email); // Debugging statement
-        const query = 'SELECT * FROM users WHERE email = ?';
-        db.query(query, [email], (err, result) => {
-            if (err) {
-                console.error('Error finding user:', err); // Debugging statement
-            } else {
-                console.log('User found:', result); // Debugging statement
-            }
-            callback(err, result);
-        });
+    {
+        sequelize,
+        modelName: 'User',
+        tableName: 'users',
+        timestamps: true, // Adds createdAt and updatedAt columns
+        paranoid: true, // Enables soft deletion with a deletedAt column
+        indexes: [
+            {
+                unique: true,
+                fields: ['email', 'username'],
+            },
+        ],
     }
-};
+);
 
 module.exports = User;

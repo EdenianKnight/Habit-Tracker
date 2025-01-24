@@ -1,76 +1,74 @@
-const db = require('../db/connection');
+// Import the database configuration
+const db = require('../config/database');
 
 // Create a new habit
-const addHabit = async (req, res) => {
-    const { name, description } = req.body;
-
-    if (!name) {
-        return res.status(400).json({ message: 'Habit name is required.' });
-    }
+exports.createHabit = async (req, res) => {
+    const userId = req.user.id; // Extract user ID from JWT payload
+    const { title, description, frequency } = req.body;
 
     try {
-        const [result] = await db.query(
-            'INSERT INTO habits (user_id, name, description) VALUES (?, ?, ?)',
-            [req.user.id, name, description || null]
-        );
-        res.status(201).json({ message: 'Habit created successfully.', habitId: result.insertId });
+	await db.promise().query(
+	    'INSERT INTO habits (user_id, title, description, frequency) VALUES (?, ?, ?, ?)',
+	    [userId, title, description, frequency]
+	);
+
+	res.status(201).json({ message: 'Habit created successfully' });
     } catch (err) {
-        res.status(500).json({ message: 'Error creating habit.', error: err.message });
+	res.status(500).json({ error: 'Error creating habit', details: err.message });
     }
 };
 
-// Retrieve all habits for the logged-in user
-const getHabits = async (req, res) => {
+// Get all habits for the authenticated user
+exports.getHabits = async (req, res) => {
+    const userId = req.user.id;
+
     try {
-        const [habits] = await db.query(
-            'SELECT id, name, description, created_at FROM habits WHERE user_id = ?',
-            [req.user.id]
-        );
-        res.json({ habits });
+	const [habits] = await db.promise().query('SELECT * FROM habits WHERE user_id = ?', [userId]);
+	res.status(200).json(habits);
     } catch (err) {
-        res.status(500).json({ message: 'Error retrieving habits.', error: err.message });
+	res.status(500).json({ error: 'Error fetching habits', details: err.message });
     }
 };
 
 // Update a habit
-const updateHabit = async (req, res) => {
-    const { id } = req.params;
-    const { name, description } = req.body;
+exports.updateHabit = async (req, res) => {
+    const userId = req.user.id;
+    const habitId = req.params.id;
+    const { title, description, frequency } = req.body;
 
     try {
-        const [result] = await db.query(
-            'UPDATE habits SET name = ?, description = ? WHERE id = ? AND user_id = ?',
-            [name, description, id, req.user.id]
-        );
+	const [result] = await db.promise().query(
+	    'UPDATE habits SET title = ?, description = ?, frequency = ? WHERE id = ? AND user_id = ?',
+	    [title, description, frequency, habitId, userId]
+	);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Habit not found or not authorized to update.' });
-        }
+	if (result.affectedRows === 0) {
+	    return res.status(404).json({ error: 'Habit not found or not authorized' });
+	}
 
-        res.json({ message: 'Habit updated successfully.' });
+	res.status(200).json({ message: 'Habit updated successfully' });
     } catch (err) {
-        res.status(500).json({ message: 'Error updating habit.', error: err.message });
+	res.status(500).json({ error: 'Error updating habit', details: err.message });
     }
 };
 
 // Delete a habit
-const deleteHabit = async (req, res) => {
-    const { id } = req.params;
+exports.deleteHabit = async (req, res) => {
+    const userId = req.user.id;
+    const habitId = req.params.id;
 
     try {
-        const [result] = await db.query(
-            'DELETE FROM habits WHERE id = ? AND user_id = ?',
-            [id, req.user.id]
-        );
+	const [result] = await db.promise().query(
+	    'DELETE FROM habits WHERE id = ? AND user_id = ?',
+	    [habitId, userId]
+	);
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Habit not found or not authorized to delete.' });
-        }
+	if (result.affectedRows === 0) {
+	    return res.status(404).json({ error: 'Habit not found or not authorized' });
+	}
 
-        res.json({ message: 'Habit deleted successfully.' });
+	res.status(200).json({ message: 'Habit deleted successfully' });
     } catch (err) {
-        res.status(500).json({ message: 'Error deleting habit.', error: err.message });
+	res.status(500).json({ error: 'Error deleting habit', details: err.message });
     }
 };
-
-module.exports = { addHabit, getHabits, updateHabit, deleteHabit };

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Small Steps</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Your Dashboard</h1>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <section id="user-habits">
+            <h2>Your Habits</h2>
+            <form id="habitForm">
+                <label for="habitName">Add New Habit:</label>
+                <input type="text" id="habitName" required>
+                <button type="submit">Add Habit</button>
+            </form>
+
+            <table id="habitTable">
+                <thead>
+                    <tr>
+                        <th>Habit</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="habitList">
+                    <!-- Habits will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module" src="../assets/js/dashboard.js"></script>
+</body>
+</html>

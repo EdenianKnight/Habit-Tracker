@@ -1,57 +1,75 @@
-// Load environment variables from .env file
-require('dotenv').config();
+/**
+ * Small Steps Backend Server
+ * Initializes and starts the backend server, connecting all necessary middleware and routes.
+ */
 
-// Import required dependencies
 const express = require('express');
+const dotenv = require('dotenv');
 const cors = require('cors');
+const errorHandler = require('./utils/errorHandler');
+
+// Load environment variables first
+dotenv.config();
+
+// Import database connection
 const db = require('./config/database');
 
-// Import routes
+// Import Routes
 const userRoutes = require('./routes/userRoutes');
+const habitRoutes = require('./routes/habitRoutes');
+const guestRoutes = require('./routes/guestRoutes');
 
-// Initialize express application
 const app = express();
 
-// --- Middleware Configuration ---
-// Enable Cross-Origin Resource Sharing (CORS)
-app.use(cors());
+// Middleware
+app.use(express.json()); // Parse incoming JSON requests
 
-// Parse incoming JSON requests
-app.use(express.json());
+// Update the CORS middleware in server.js
+app.use(cors({
+    origin: 'http://127.0.0.1:5500', // Update this to match your frontend URL
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+//app.use(cors()); // Enable Cross-Origin Resource Sharing
 
-// --- Environment Variables ---
-// Set port from environment variables or use 5000 as default
-const PORT = process.env.PORT || 5000;
-
-// --- Route Mounting ---
-// Mount user routes under /api/users endpoint
-app.use('/api/users', userRoutes);
-
-// --- Base Routes ---
-// Test route to verify server is running
+// Root route
 app.get('/', (req, res) => {
-    res.send('HabiTraqa Backend is Running!');
-});
-
-// Health check endpoint for monitoring
-app.get('/health', (req, res) => {
-    res.status(200).json({
-        status: 'ok',
-        database: db.state === 'authenticated' ? 'connected' : 'disconnected'
+    res.json({
+        message: 'Welcome to Small Steps API',
+        version: '1.0.0',
+        endpoints: {
+            users: '/api/users',
+            habits: '/api/habits',
+            guest: '/api/guest'
+        }
     });
 });
 
-// --- Error Handling Middleware ---
-// Global error handler for unhandled errors
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+// API Routes
+app.use('/api/users', userRoutes); // User-related routes
+app.use('/api/habits', habitRoutes); // Habit-related routes
+app.use('/api/guest', guestRoutes); // Guest mode routes
+
+// Error Handling Middleware
+app.use(errorHandler);
+
+// Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
 });
 
-// --- Server Initialization ---
-// Start the server and listen for requests
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-}).on('error', (err) => {
-    console.error('Server failed to start:', err);
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+    console.log('Unhandled Rejection! 💥 Shutting down...');
+    console.log(err.name, err.message);
+    server.close(() => {
+        process.exit(1);
+    });
+});
+
+//tests
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Backend connection successful!' });
 });
